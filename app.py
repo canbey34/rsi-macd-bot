@@ -37,4 +37,4 @@ if len(date_range) == 2:
 
         # Al / Sat sinyalleri
         data['Buy_Signal'] = (data['RSI'] < 30) & (data['MACD'] > data['Signal'])
-        data['Sell_Signal'] = (data['RSI'] > 70) & (data['MACD'] < data['Signal'])_]()
+        data['Sell_Signal'] = (data['RSI'] > 70) & (data['MACD'] < data['Signal'])
