@@ -44,7 +44,7 @@ if len(date_range) == 2:
         # Son sinyali göster
         latest = data.iloc[-1]
         st.subheader("📍 Son Durum")
-        st.write(f"Kapanış Fiyatı: ${latest['Close']:.4f}")
+        st.write(f"Kapanış Fiyatı: ${float(latest['Close']):.4f}")
         st.write(f"RSI: {latest['RSI']:.2f}")
         st.write(f"MACD: {latest['MACD']:.5f} / Signal: {latest['Signal']:.5f}")
 
