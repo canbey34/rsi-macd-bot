@@ -38,3 +38,38 @@ if len(date_range) == 2:
         # Al / Sat sinyalleri
         data['Buy_Signal'] = (data['RSI'] < 30) & (data['MACD'] > data['Signal'])
         data['Sell_Signal'] = (data['RSI'] > 70) & (data['MACD'] < data['Signal'])
+
+        # Son veri - tek satır Series olarak alıyoruz
+        latest = data.tail(1).squeeze()
+
+        st.subheader("📍 Son Durum")
+        st.write(f"Kapanış Fiyatı: ${float(latest['Close']):.4f}")
+        st.write(f"RSI: {float(latest['RSI']):.2f}")
+        st.write(f"MACD: {float(latest['MACD']):.5f} / Signal: {float(latest['Signal']):.5f}")
+
+        if latest['Buy_Signal']:
+            st.success("✅ ALIM SİNYALİ (RSI < 30 ve MACD yukarı kesişim)")
+        elif latest['Sell_Signal']:
+            st.error("❌ SATIM SİNYALİ (RSI > 70 ve MACD aşağı kesişim)")
+        else:
+            st.info("📉 Nötr - Henüz net bir sinyal oluşmadı")
+
+        # Grafikler
+        st.subheader("📈 Fiyat & RSI Grafiği")
+        fig, ax = plt.subplots(2, 1, figsize=(10, 6), sharex=True)
+        ax[0].plot(data['Close'], label='Fiyat')
+        ax[0].set_ylabel("Fiyat ($)")
+        ax[0].legend()
+
+        ax[1].plot(data['RSI'], label='RSI', color='orange')
+        ax[1].axhline(70, color='red', linestyle='--', linewidth=1)
+        ax[1].axhline(30, color='green', linestyle='--', linewidth=1)
+        ax[1].set_ylabel("RSI")
+        ax[1].legend()
+
+        st.pyplot(fig)
+
+        # Sinyal Tablosu
+        st.subheader("🔍 Alım / Satım Sinyalleri")
+        signal_df = data[(data['Buy_Signal']) | (data['Sell_Signal'])][['Close', 'RSI', 'MACD', 'Signal', 'Buy_Signal', 'Sell_Signal']]
+        st.dataframe(signal_df.tail(10))
