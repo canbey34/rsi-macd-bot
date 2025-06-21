@@ -46,12 +46,12 @@ if len(date_range) == 2:
         st.write(f"RSI: {float(latest['RSI']):.2f}")
         st.write(f"MACD: {float(latest['MACD']):.5f} / Signal: {float(latest['Signal']):.5f}")
 
-        if latest['Buy_Signal'].any():
-            st.success("✅ ALIM SİNYALİ (RSI < 30 ve MACD yukarı kesişim)")
-        elif bool(latest['Sell_Signal']):
-            st.error("❌ SATIM SİNYALİ (RSI > 70 ve MACD aşağı kesişim)")
-        else:
-            st.info("📉 Nötr - Henüz net bir sinyal oluşmadı")
+if latest['Buy_Signal']:
+    st.success("✅ ALIM SİNYALİ (RSI < 30 ve MACD yukarı kesişim)")
+elif latest['Sell_Signal']:
+    st.error("❌ SATIM SİNYALİ (RSI > 70 ve MACD aşağı kesişim)")
+else:
+    st.info("📉 Nötr - Henüz net bir sinyal oluşmadı")
 
         # Grafikler
         st.subheader("📈 Fiyat & RSI Grafiği")
