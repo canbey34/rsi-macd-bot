@@ -40,11 +40,18 @@ if len(date_range) == 2:
         data['Sell_Signal'] = (data['RSI'] > 70) & (data['MACD'] < data['Signal'])
 
         # Son veri
-        latest = data.iloc[-1]  # Tek satır, pandas Series
-        st.subheader("📍 Son Durum")
-        st.write(f"Kapanış Fiyatı: ${float(latest['Close']):.4f}")
-        st.write(f"RSI: {float(latest['RSI']):.2f}")
-        st.write(f"MACD: {float(latest['MACD']):.5f} / Signal: {float(latest['Signal']):.5f}")
+latest = data.tail(1).squeeze()
+
+st.write("latest tipi:", type(latest))
+st.write(latest)
+
+if latest['Buy_Signal'] == True:
+    st.success("✅ ALIM SİNYALİ (RSI < 30 ve MACD yukarı kesişim)")
+elif latest['Sell_Signal'] == True:
+    st.error("❌ SATIM SİNYALİ (RSI > 70 ve MACD aşağı kesişim)")
+else:
+    st.info("📉 Nötr - Henüz net bir sinyal oluşmadı")
+
 
         # Burada doğrudan bool kontrolü
         if latest['Buy_Signal']:
