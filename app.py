@@ -14,6 +14,20 @@ symbol_input = st.text_input("Coin Sembolü (örn: BTCUSDT, DOGEUSDT)", value="B
 days_input = st.slider("Kaç Günlük Veri Kullanılsın?", min_value=30, max_value=365, value=120)
 interval = "1d"
 
+# 🔢 Stop Limit Hesaplayıcı
+st.sidebar.header("🛡️ Stop Limit Hesaplayıcı")
+entry_price = st.sidebar.number_input("Alım Fiyatı (Entry)", min_value=0.0, format="%.4f")
+position_type = st.sidebar.radio("Pozisyon Tipi", ["Long", "Short"])
+
+if entry_price > 0:
+    stop_limit = 0
+    if position_type == "Long":
+        stop_limit = entry_price * 0.90  # %10 aşağı
+        st.sidebar.success(f"🔻 %10 Stop Loss: ${stop_limit:.4f}")
+    else:
+        stop_limit = entry_price * 1.10  # %10 yukarı
+        st.sidebar.success(f"🔺 %10 Stop Loss: ${stop_limit:.4f}")
+
 if symbol_input:
     limit = min(max(days_input, 10), 1000)  # MEXC maksimum 1000 veri döner
 
