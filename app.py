@@ -39,20 +39,22 @@ if len(date_range) == 2:
         data['Buy_Signal'] = (data['RSI'] < 30) & (data['MACD'] > data['Signal'])
         data['Sell_Signal'] = (data['RSI'] > 70) & (data['MACD'] < data['Signal'])
 
-        # Son veri - tek satır Series olarak alıyoruz
-        latest = data.tail(1).squeeze()
-
+        # Son veri
+        latest = data.iloc[-1]
         st.subheader("📍 Son Durum")
         st.write(f"Kapanış Fiyatı: ${float(latest['Close']):.4f}")
         st.write(f"RSI: {float(latest['RSI']):.2f}")
         st.write(f"MACD: {float(latest['MACD']):.5f} / Signal: {float(latest['Signal']):.5f}")
 
-        if latest['Buy_Signal']:
-            st.success("✅ ALIM SİNYALİ (RSI < 30 ve MACD yukarı kesişim)")
-        elif latest['Sell_Signal']:
-            st.error("❌ SATIM SİNYALİ (RSI > 70 ve MACD aşağı kesişim)")
-        else:
-            st.info("📉 Nötr - Henüz net bir sinyal oluşmadı")
+        try:
+            if bool(latest['Buy_Signal'].item() if hasattr(latest['Buy_Signal'], 'item') else latest['Buy_Signal']):
+                st.success("✅ ALIM SİNYALİ (RSI < 30 ve MACD yukarı kesişim)")
+            elif bool(latest['Sell_Signal'].item() if hasattr(latest['Sell_Signal'], 'item') else latest['Sell_Signal']):
+                st.error("❌ SATIM SİNYALİ (RSI > 70 ve MACD aşağı kesişim)")
+            else:
+                st.info("📉 Nötr - Henüz net bir sinyal oluşmadı")
+        except Exception as e:
+            st.warning(f"Sinyal kontrolü sırasında hata oluştu: {e}")
 
         # Grafikler
         st.subheader("📈 Fiyat & RSI Grafiği")
