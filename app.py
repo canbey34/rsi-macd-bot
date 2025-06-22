@@ -9,15 +9,13 @@ import datetime
 st.title("📊 RSI + MACD Sinyal Botu (MEXC Veri Kaynağı)")
 st.markdown("Bu bot, MEXC borsasından gerçek zamanlı verilerle RSI ve MACD göstergelerine göre **AL/SAT sinyali** üretir.")
 
-# Kullanıcıdan coin ve tarih aralığı al
+# Kullanıcıdan coin ve gün sayısı al
 symbol_input = st.text_input("Coin Sembolü (örn: BTCUSDT, DOGEUSDT)", value="BTCUSDT")
-date_range = st.date_input("Veri Aralığı", [datetime.date(2024, 1, 1), datetime.date(2024, 6, 1)])
+days_input = st.slider("Kaç Günlük Veri Kullanılsın?", min_value=30, max_value=365, value=120)
 interval = "1d"
 
-if len(date_range) == 2:
-    start_date, end_date = date_range
-    days = (end_date - start_date).days
-    limit = min(max(days, 10), 1000)  # MEXC maksimum 1000 veri döner
+if symbol_input:
+    limit = min(max(days_input, 10), 1000)  # MEXC maksimum 1000 veri döner
 
     # MEXC API'den veri çek
     url = f"https://api.mexc.com/api/v3/klines?symbol={symbol_input}&interval={interval}&limit={limit}"
@@ -31,7 +29,7 @@ if len(date_range) == 2:
         if not isinstance(raw_data, list) or not raw_data:
             st.warning("⚠️ Beklenen formatta veri alınamadı.")
         else:
-            # En az 6 elemanlı satırları filtrele
+            # En az 8 elemanlı satırları filtrele
             cleaned_data = [row for row in raw_data if isinstance(row, list) and len(row) >= 8]
 
             try:
