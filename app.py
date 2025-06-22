@@ -32,13 +32,12 @@ if len(date_range) == 2:
             st.warning("⚠️ Beklenen formatta veri alınamadı.")
         else:
             # En az 6 elemanlı satırları filtrele
-            cleaned_data = [row for row in raw_data if isinstance(row, list) and len(row) >= 6]
+            cleaned_data = [row for row in raw_data if isinstance(row, list) and len(row) >= 8]
 
             try:
                 df = pd.DataFrame(cleaned_data, columns=[
                     "Open Time", "Open", "High", "Low", "Close", "Volume",
-                    "Close Time", "Quote Asset Volume", "Number of Trades",
-                    "Taker Buy Base", "Taker Buy Quote", "Ignore"])
+                    "Close Time", "Quote Asset Volume"])
             except Exception as e:
                 st.error(f"DataFrame oluşturulurken hata: {e}")
             else:
